@@ -1,0 +1,4 @@
+auth       include      password-auth
+account    include      password-auth
+password   include      password-auth
+session    include      password-auth

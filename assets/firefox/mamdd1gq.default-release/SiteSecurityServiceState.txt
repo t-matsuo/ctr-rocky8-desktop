@@ -1,0 +1,4 @@
+classify-client.services.mozilla.com:HSTS	0	18914	1665753129123,1,0,2
+firefox.settings.services.mozilla.com:HSTS	0	18914	1665753236414,1,0,2
+incoming.telemetry.mozilla.org:HSTS	0	18914	1649985232467,1,0,2
+normandy.cdn.mozilla.net:HSTS	0	18914	1665753128668,1,0,2

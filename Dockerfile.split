@@ -1,0 +1,237 @@
+#ifndef CONTAINER
+FROM rockylinux/rockylinux:8.4
+#endif
+#ifdef CONTAINER
+FROM tmatsuo/rocky8
+#endif
+
+LABEL maintainer="matsuo.tak@gmail.com"
+
+### Envrionment config
+ENV HOME=/root \
+    TERM=xterm \
+    CTR_SCRIPTS=/container/scripts \
+    CTR_LOG=/container/log \
+#ifdef DESKTOP
+    NO_VNC_HOME=/container/novnc \
+#endif
+#ifdef CODE
+    CODE_OPTS="--auth none" \
+#endif
+    LANG='ja_JP.utf8' LANGUAGE='ja_JP:ja' LC_ALL='ja_JP.UTF-8'
+
+WORKDIR $HOME
+
+#__BULDKIT_MARKER__RUN --mount=type=cache,id=rocky8,target=/var/cache/dnf --mount=type=cache,id=rocky8,target=/var/lib/dnf --mount=type=cache,id=rocky8,target=/root/.cache --mount=type=cache,id=rocky8,target=/root/.npm echo "##### Using buildkit #####"
+
+RUN echo "keepcache=True" >> /etc/dnf/dnf.conf
+RUN mkdir -p $CTR_LOG
+
+RUN echo "###### install epel repository ######"
+RUN dnf install -y epel-release
+
+RUN echo "###### install nessecery packages ######"
+RUN dnf install -y passwd sudo wget
+
+RUN echo "###### install Japanese tools ######"
+RUN dnf install -y glibc-locale-source glibc-langpack-en langpacks-en glibc-langpack-ja langpacks-ja.noarch
+
+RUN echo "###### set locale ######"
+RUN localedef -f UTF-8 -i ja_JP ja_JP.UTF-8
+
+RUN echo "###### install supervisord ######"
+RUN dnf install -y supervisor
+
+#ifdef NGINX
+RUN echo "###### install nginx and pam auth module ######"
+RUN dnf install -y @nginx:1.16/common
+RUN dnf install -y https://github.com/jfut/nginx-module-auth-pam-rpm/releases/download/v1.5.3-1/nginx-module-auth-pam-1.5.3-1.module_el8.1.16.x86_64.rpm
+RUN mkdir /etc/pki/nginx/
+RUN groupadd -g 42 shadow
+RUN chgrp shadow /etc/gshadow
+RUN chgrp shadow /etc/shadow
+RUN chgrp shadow /sbin/unix_chkpwd
+RUN chgrp shadow /usr/bin/chage
+RUN chmod 2755 /sbin/unix_chkpwd
+RUN chmod 2755 /usr/bin/chage
+RUN chmod 640 /etc/shadow
+RUN chmod 640 /etc/gshadow
+RUN gpasswd -a nginx shadow
+#endif
+
+#ifdef DESKTOP
+RUN echo "###### install input tools ######"
+RUN dnf install -y fcitx https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/f/fcitx-anthy-0.2.2-4.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/a/anthy-9100h-26.el7.x86_64.rpm
+
+RUN echo "###### install X and VNC ######"
+RUN dnf install -y xorg-x11-server-Xorg tigervnc-server-1.11.0-6.el8
+
+RUN echo "###### install xfce ######"
+RUN dnf -y -x gnome-keyring -x thunar-volman -x xfce4-screensaver -x xfce4-power-manager -x openssh-askpass -x grub2-tools --skip-broken groups install "Xfce" 
+RUN dnf -y groups install "Fonts"
+RUN dnf install -y xfce4-session
+RUN rm /etc/xdg/autostart/xfce-polkit*
+#endif
+
+#ifdef XRDP
+RUN echo "###### install xrdp ######"
+RUN dnf install -y xrdp
+#endif
+
+#ifdef DESKTOP
+RUN echo "###### install firefox ######"
+RUN dnf install -y firefox
+#ifdef CHROME
+RUN echo "###### install chrome ######"
+RUN echo -e '[google-chrome]\nname=google-chrome\nbaseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearch\nenabled=1\ngpgcheck=1\ngpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub\n' >> /etc/yum.repos.d/chrome.repo
+RUN dnf install -y google-chrome-stable.x86_64
+#endif
+#endif
+
+#ifdef SSHD
+RUN echo "###### install open-ssh and allow ssh login ######"
+RUN dnf install -y openssh-server
+RUN rm -f /run/nologin
+#endif
+
+RUN echo "###### setup python command ######"
+RUN alternatives --set python /usr/bin/python3
+
+#ifdef TTYD
+RUN echo "###### install ttyd ######"
+RUN curl -L -o /usr/local/bin/ttyd https://github.com/t-matsuo/ttyd/releases/download/1.6.1.1/ttyd_linux.x86_64
+RUN chmod 755 /usr/local/bin/ttyd
+#endif
+
+#ifdef DESKTOP
+RUN echo "###### install vnc ######"
+RUN mkdir -p $NO_VNC_HOME/utils/websockify
+RUN wget -qO- https://github.com/novnc/noVNC/archive/v1.2.0.tar.gz | tar xz --strip 1 -C $NO_VNC_HOME
+RUN wget -qO- https://github.com/novnc/websockify/archive/v0.9.0.tar.gz | tar xz --strip 1 -C $NO_VNC_HOME/utils/websockify
+RUN chmod +x -v $NO_VNC_HOME/utils/*.sh
+RUN ln -s $NO_VNC_HOME/vnc.html $NO_VNC_HOME/index.html
+#endif
+
+#ifdef FILER
+RUN echo "###### install filebrowser ######"
+RUN curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
+RUN mkdir /var/lib/filebrowser
+RUN chown root:root /usr/local/bin/filebrowser
+#endif
+
+#ifdef CODE
+RUN echo "###### install vscode ######"
+RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --version 3.6.0
+RUN /usr/bin/code-server --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+RUN /usr/bin/code-server --install-extension ms-ceintl.vscode-language-pack-ja
+RUN /usr/bin/code-server --install-extension auchenberg.vscode-browser-preview
+RUN /usr/bin/code-server --install-extension ipedrazas.kubernetes-snippets
+RUN /usr/bin/code-server --install-extension ms-azuretools.vscode-docker
+RUN /usr/bin/code-server --install-extension tomoki1207.pdf
+#endif
+
+RUN echo "###### install gosu ######"
+RUN curl -L --output /usr/local/bin/gosu  https://github.com/tianon/gosu/releases/download/1.14/gosu-amd64
+RUN chmod 755 /usr/local/bin/gosu
+
+RUN echo "###### install some tools ######"
+RUN dnf install -y python2-pip.noarch psmisc openssh-clients vim which net-tools bzip2 mailcap bash-completion nss_wrapper gettext bind-utils tcpdump socat openssl screen tmux strace ltrace nmap-ncat iproute iputils ethtool
+
+RUN echo "###### clanup ######"
+RUN rm -f /root/anaconda-post.log
+RUN rm -f /root/original-ks.cfg
+#ifdef DESKTOP
+RUN rm -f /usr/share/doc/HTML/index.html
+#endif
+
+RUN echo "###### setup supervisord ######"
+RUN sed -i "s/nodaemon=false/nodaemon=true/g" /etc/supervisord.conf
+RUN chown root:root $HOME && chmod 750 $HOME && find $HOME -type d -exec chmod 750 {} +
+
+RUN echo "###### add cap_net_bind_service ######"
+#ifdef NGINX
+RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx
+#endif
+RUN setcap 'cap_net_bind_service=+ep' /usr/libexec/platform-python3.6
+#ifdef DESKTOP
+RUN setcap 'cap_net_bind_service=+ep' /usr/bin/Xvnc
+#endif
+
+#ifdef XRDP
+RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/xrdp
+#endif
+
+#ifdef SSHD
+RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/sshd
+#endif
+
+RUN echo "###### install nafder ######"
+RUN curl -L -o /usr/local/bin/nafder https://github.com/t-matsuo/nafder/releases/download/v0.1.1/nafder_0.1.1_Linux_x86_64
+RUN chmod 755 /usr/local/bin/nafder
+
+RUN echo "###### add and copy files ######"
+COPY ./assets/scripts/supervisord_startup.sh $CTR_SCRIPTS/
+#ifdef DESKTOP
+COPY ./assets/xfce/Desktop/firefox.desktop $HOME/Desktop/firefox.desktop
+COPY ./assets/xfce/Desktop/terminal.desktop $HOME/Desktop/terminal.desktop
+#ifdef CHROME
+COPY ./assets/xfce/Desktop/google-chrome.desktop $HOME/Desktop/google-chrome.desktop
+#endif
+#endif
+COPY ./assets/scripts/entrypoint.sh $CTR_SCRIPTS/
+COPY ./assets/supervisor/nafder.ini /etc/supervisord.d/
+#ifdef DESKTOP
+COPY ./assets/scripts/vnc_startup.sh $CTR_SCRIPTS/
+COPY ./assets/scripts/wm_startup.sh $CTR_SCRIPTS/
+COPY ./assets/supervisor/vnc.ini /etc/supervisord.d/
+COPY ./assets/firefox $HOME/.mozilla/firefox/
+COPY ./assets/wallpaper/default.png /usr/share/backgrounds/images/default.png
+COPY ./assets/scripts/vnc_startup.sh $CTR_SCRIPTS/vnc_startup.sh
+COPY ./assets/scripts/set-resolution /usr/local/bin/
+# Pach VNC. See https://github.com/novnc/noVNC/pull/1451
+COPY ./assets/novnc/vnc.html $NO_VNC_HOME/vnc.html
+COPY ./assets/novnc/launch.sh $NO_VNC_HOME/utils/launch.sh
+#endif
+#ifdef NGINX
+COPY ./assets/supervisor/nginx.ini /etc/supervisord.d/
+COPY ./assets/nginx/nginx.conf.tmpl /etc/nginx/
+COPY ./assets/nginx/default.d/* /etc/nginx/default.d/
+COPY ./assets/nginx/pam_nginx /etc/pam.d/nginx
+COPY ./assets/scripts/nginx_startup.sh $CTR_SCRIPTS/
+#endif
+
+#ifdef CODE
+COPY ./assets/scripts/code_startup.sh $CTR_SCRIPTS/
+COPY ./assets/supervisor/code.ini /etc/supervisord.d/
+COPY ./assets/code/settings.json $HOME/.local/share/code-server/User/
+COPY ./assets/code/argv.json $HOME/.local/share/code-server/User/
+COPY ./assets/code/keybindings.json $HOME/.local/share/code-server/User/
+#endif
+
+#ifdef FILER
+COPY ./assets/supervisor/filebrowser.ini /etc/supervisord.d/
+COPY ./assets/scripts/filebrowser_startup.sh $CTR_SCRIPTS/
+#endif
+
+#ifdef SSHD
+COPY ./assets/scripts/sshd_startup.sh $CTR_SCRIPTS/
+COPY ./assets/supervisor/sshd.ini /etc/supervisord.d/
+#endif
+
+#ifdef TTYD
+COPY ./assets/supervisor/ttyd.ini /etc/supervisord.d/
+COPY ./assets/scripts/ttyd_startup.sh $CTR_SCRIPTS/
+#endif
+
+#ifdef XRDP
+COPY ./assets/supervisor/xrdp-sesman.ini /etc/supervisord.d/
+COPY ./assets/supervisor/xrdp.ini /etc/supervisord.d/
+COPY ./assets/xrdp/xrdp.ini /etc/xrdp/
+COPY ./assets/xrdp/sesman.ini /etc/xrdp/
+COPY ./assets/scripts/xrdp-sesman_startup.sh $CTR_SCRIPTS/
+COPY ./assets/scripts/xrdp_startup.sh $CTR_SCRIPTS/
+#endif
+
+USER 0
+ENTRYPOINT ["/container/scripts/entrypoint.sh"]
+

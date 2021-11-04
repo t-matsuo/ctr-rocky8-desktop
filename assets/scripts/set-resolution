@@ -1,0 +1,45 @@
+#!/bin/bash
+
+NEW_RESOLUTION=$1
+echo "New resolution is $NEW_RESOLUTION"
+
+CURRENT_RESOLUTION=`xrandr | grep current | tr -s " " | cut -d " " -f 8`x`xrandr | grep current | tr -s " " | cut -d " " -f 10 | cut -d "," -f 1`
+if [ "$CURRENT_RESOLUTION" = "$NEW_RESOLUTION" ]; then
+    echo "Current resolution is already $CURRENT_RESOLUTION"
+    exit 0
+fi
+
+xrandr > /dev/null || exit 1
+xrandr | grep -q "   $NEW_RESOLUTION   "
+if [ $? = 0 ]; then
+    echo "Resolution $NEW_RESOLUTION is already registerd"
+else
+    echo "$NEW_RESOLUTION" | grep -q "^[0-9]*x[0-9]*$"
+    if [ $? -ne 0 ]; then
+        echo "Invalid resolution $NEW_RESOLUTION"
+        exit 1
+    fi
+
+    RES_X=`echo $NEW_RESOLUTION | cut -d "x" -f1`
+    RES_Y=`echo $NEW_RESOLUTION | cut -d "x" -f2`
+    GTF=`gtf $RES_X $RES_Y 60 | grep Modeline | cut -d "\"" -f 3`
+
+    echo "Registering $NEW_RESOLUTION"
+    xrandr --newmode $NEW_RESOLUTION $GTF
+    sleep 1
+    xrandr --addmode VNC-0 $NEW_RESOLUTION
+fi
+
+echo "Changing resolution to $NEW_RESOLUTION"
+xrandr --output VNC-0 --mode $NEW_RESOLUTION
+
+echo "Save this resolution? y/N"
+read yn
+if [ "$yn" != "y" ]; then
+    echo "Restoring resolution to $CURRENT_RESOLUTION"
+    xrandr --output VNC-0 --mode $CURRENT_RESOLUTION
+else
+    sed -i "s/.*geometry=.*/geometry=$NEW_RESOLUTION/g" $HOME/.vnc/config
+    sed -i '/name="Resolution" /d'  $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml
+fi
+

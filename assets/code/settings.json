@@ -1,0 +1,11 @@
+{
+ "terminal.integrated.shell.linux": "/bin/bash",
+ "workbench.colorTheme": "Default Dark+",
+ "terminal.integrated.allowChords": false,
+ "workbench.enableExperiments": false,
+ "workbench.settings.enableNaturalLanguageSearch": false,
+ "update.mode": "none",
+ "extensions.autoCheckUpdates": false,
+ "extensions.autoUpdate": false,
+ "npm.fetchOnlinePackageInfo": false
+}

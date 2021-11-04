@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Terminal
+Name[ja]=ターミナル
+Comment=
+Exec=/usr/bin/xfce4-terminal
+Icon=utilities-terminal
+Path=
+Terminal=false
+StartupNotify=false
