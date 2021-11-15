@@ -93,6 +93,10 @@ if [ -f /etc/supervisord.d/nginx.ini ]; then
     export PORT
 fi
 
+if [ "$USER" = "" ]; then
+    USER="root"
+fi
+
 # pre hook
 if [ "$PRE_HOOK" != "" ]; then
     echo "---- pre hook : $PRE_HOOK --------------"
@@ -237,10 +241,6 @@ EOF
 
     if [ "$DOCKER_HOST" != "" ] && [ ! -f /etc/update-done ]; then
         echo "export DOCKER_HOST=$DOCKER_HOST" >> $HOME/.bashrc
-    fi
-
-    if [ "$USER" = "" ]; then
-        USER="root"
     fi
 
     if [ "$PASSWORD" = "" ]; then
