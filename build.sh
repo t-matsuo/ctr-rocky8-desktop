@@ -27,12 +27,16 @@ elif [ "$FLAVOR" = "desktop-with-term-filer" ]; then
     DESKTOP="" NGINX="" FILER="" TTYD="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "vscode" ]; then
     NGINX="" CODE="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
+elif [ "$FLAVOR" = "vscode-custom" ]; then
+    NGINX="" CODE="" CONTAINER="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "term" ]; then
     NGINX="" TTYD="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "term-with-filer" ]; then
     NGINX="" FILER="" TTYD="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "xrdp" ]; then
     DESKTOP="" XRDP="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
+elif [ "$FLAVOR" = "desktop-full-custom" ]; then
+    DESKTOP="" NGINX="" CODE="" XRDP="" FILER="" SSHD="" TTYD="" CHROME="" CONTAINER="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 else
     # desktop-full
     DESKTOP="" NGINX="" CODE="" XRDP="" FILER="" SSHD="" TTYD="" CHROME="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
