@@ -1,5 +1,5 @@
 #ifndef CONTAINER
-FROM rockylinux/rockylinux:8.4
+FROM rockylinux/rockylinux:8.5
 #endif
 #ifdef CONTAINER
 FROM tmatsuo/rocky8
@@ -31,10 +31,10 @@ RUN echo "###### install epel repository ######"
 RUN dnf install -y epel-release
 
 RUN echo "###### install nessecery packages ######"
-RUN dnf install -y passwd sudo wget
+RUN dnf install -y passwd sudo wget findutils
 
 RUN echo "###### install Japanese tools ######"
-RUN dnf install -y glibc-locale-source glibc-langpack-en langpacks-en glibc-langpack-ja langpacks-ja.noarch
+RUN dnf install -y glibc-locale-source glibc-langpack-en langpacks-en glibc-langpack-ja langpacks-ja.noarch glibc-locale-source
 
 RUN echo "###### set locale ######"
 RUN localedef -f UTF-8 -i ja_JP ja_JP.UTF-8
@@ -123,12 +123,6 @@ RUN chown root:root /usr/local/bin/filebrowser
 #ifdef CODE
 RUN echo "###### install vscode ######"
 RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --version 3.8.1
-#RUN /usr/bin/code-server --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
-#RUN /usr/bin/code-server --install-extension ms-ceintl.vscode-language-pack-ja
-#RUN /usr/bin/code-server --install-extension auchenberg.vscode-browser-preview
-#RUN /usr/bin/code-server --install-extension ipedrazas.kubernetes-snippets
-#RUN /usr/bin/code-server --install-extension ms-azuretools.vscode-docker
-#RUN /usr/bin/code-server --install-extension tomoki1207.pdf
 #endif
 
 RUN echo "###### install gosu ######"
