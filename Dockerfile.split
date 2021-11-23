@@ -64,7 +64,7 @@ RUN echo "###### install input tools ######"
 RUN dnf install -y fcitx https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/f/fcitx-anthy-0.2.2-4.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/a/anthy-9100h-26.el7.x86_64.rpm
 
 RUN echo "###### install X and VNC ######"
-RUN dnf install -y xorg-x11-server-Xorg tigervnc-server-1.11.0-6.el8
+RUN dnf install -y xorg-x11-server-Xorg tigervnc-server
 
 RUN echo "###### install xfce ######"
 RUN dnf -y -x gnome-keyring -x thunar-volman -x xfce4-screensaver -x xfce4-power-manager -x openssh-askpass -x grub2-tools --skip-broken groups install "Xfce" 
