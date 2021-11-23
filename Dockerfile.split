@@ -81,11 +81,12 @@ RUN dnf install -y xrdp
 #ifdef DESKTOP
 RUN echo "###### install firefox ######"
 RUN dnf install -y firefox
+#endif
+
 #ifdef CHROME
 RUN echo "###### install chrome ######"
 RUN echo -e '[google-chrome]\nname=google-chrome\nbaseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearch\nenabled=1\ngpgcheck=1\ngpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub\n' >> /etc/yum.repos.d/chrome.repo
 RUN dnf install -y google-chrome-stable.x86_64
-#endif
 #endif
 
 #ifdef SSHD
@@ -121,13 +122,13 @@ RUN chown root:root /usr/local/bin/filebrowser
 
 #ifdef CODE
 RUN echo "###### install vscode ######"
-RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --version 3.6.0
-RUN /usr/bin/code-server --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
-RUN /usr/bin/code-server --install-extension ms-ceintl.vscode-language-pack-ja
-RUN /usr/bin/code-server --install-extension auchenberg.vscode-browser-preview
-RUN /usr/bin/code-server --install-extension ipedrazas.kubernetes-snippets
-RUN /usr/bin/code-server --install-extension ms-azuretools.vscode-docker
-RUN /usr/bin/code-server --install-extension tomoki1207.pdf
+RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --version 3.8.1
+#RUN /usr/bin/code-server --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+#RUN /usr/bin/code-server --install-extension ms-ceintl.vscode-language-pack-ja
+#RUN /usr/bin/code-server --install-extension auchenberg.vscode-browser-preview
+#RUN /usr/bin/code-server --install-extension ipedrazas.kubernetes-snippets
+#RUN /usr/bin/code-server --install-extension ms-azuretools.vscode-docker
+#RUN /usr/bin/code-server --install-extension tomoki1207.pdf
 #endif
 
 RUN echo "###### install gosu ######"
@@ -168,6 +169,19 @@ RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/sshd
 RUN echo "###### install nafder ######"
 RUN curl -L -o /usr/local/bin/nafder https://github.com/t-matsuo/nafder/releases/download/v0.1.1/nafder_0.1.1_Linux_x86_64
 RUN chmod 755 /usr/local/bin/nafder
+
+#break
+
+#ifdef CODE
+RUN echo "###### install vscode plugins ######"
+RUN /usr/bin/code-server --install-extension ms-ceintl.vscode-language-pack-ja
+RUN /usr/bin/code-server --install-extension tomoki1207.pdf
+#ifdef CONTAINER
+RUN /usr/bin/code-server --install-extension auchenberg.vscode-browser-preview
+RUN /usr/bin/code-server --install-extension ipedrazas.kubernetes-snippets
+RUN /usr/bin/code-server --install-extension ms-azuretools.vscode-docker
+#endif
+#endif
 
 RUN echo "###### add and copy files ######"
 COPY ./assets/scripts/supervisord_startup.sh $CTR_SCRIPTS/
@@ -234,4 +248,5 @@ COPY ./assets/scripts/xrdp_startup.sh $CTR_SCRIPTS/
 
 USER 0
 ENTRYPOINT ["/container/scripts/entrypoint.sh"]
+
 
