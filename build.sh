@@ -28,7 +28,7 @@ elif [ "$FLAVOR" = "desktop-with-term-filer" ]; then
 elif [ "$FLAVOR" = "vscode" ]; then
     NGINX="" CODE="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "vscode-custom" ]; then
-    NGINX="" CODE="" CONTAINER="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
+    NGINX="" CODE="" CONTAINER="" CHROME="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "term" ]; then
     NGINX="" TTYD="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "term-with-filer" ]; then
