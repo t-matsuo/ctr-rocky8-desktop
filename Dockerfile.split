@@ -171,6 +171,7 @@ RUN echo "###### install vscode plugins ######"
 RUN /usr/bin/code-server --install-extension ms-ceintl.vscode-language-pack-ja
 RUN /usr/bin/code-server --install-extension tomoki1207.pdf
 #ifdef CONTAINER
+RUN dnf install -y google-noto-sans-cjk-ttc-fonts-20190416-1.el8.noarch
 RUN /usr/bin/code-server --install-extension auchenberg.vscode-browser-preview
 RUN /usr/bin/code-server --install-extension ipedrazas.kubernetes-snippets
 RUN /usr/bin/code-server --install-extension ms-azuretools.vscode-docker
