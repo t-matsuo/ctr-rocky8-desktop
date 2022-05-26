@@ -1,5 +1,5 @@
 #ifndef CONTAINER
-FROM rockylinux/rockylinux:8.5
+FROM rockylinux:8.5
 #endif
 #ifdef CONTAINER
 FROM tmatsuo/rocky8
