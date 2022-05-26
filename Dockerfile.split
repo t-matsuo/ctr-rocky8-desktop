@@ -121,8 +121,8 @@ RUN chown root:root /usr/local/bin/filebrowser
 #endif
 
 #ifdef CODE
-RUN echo "###### install vscode ######"
-RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --version 3.8.1
+RUN echo "###### install code server ######"
+RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --version 4.4.0
 #endif
 
 RUN echo "###### install gosu ######"
@@ -167,7 +167,7 @@ RUN chmod 755 /usr/local/bin/nafder
 #break
 
 #ifdef CODE
-RUN echo "###### install vscode plugins ######"
+RUN echo "###### install code server extentions ######"
 RUN /usr/bin/code-server --install-extension ms-ceintl.vscode-language-pack-ja
 RUN /usr/bin/code-server --install-extension tomoki1207.pdf
 #ifdef CONTAINER
