@@ -28,24 +28,24 @@ RUN echo "keepcache=True" >> /etc/dnf/dnf.conf
 RUN mkdir -p $CTR_LOG
 
 RUN echo "###### install epel repository ######"
-RUN dnf install -y epel-release
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y epel-release
 
 RUN echo "###### install nessecery packages ######"
-RUN dnf install -y passwd sudo wget findutils
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y passwd sudo wget findutils
 
 RUN echo "###### install Japanese tools ######"
-RUN dnf install -y glibc-locale-source glibc-langpack-en langpacks-en glibc-langpack-ja langpacks-ja.noarch glibc-locale-source
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y glibc-locale-source glibc-langpack-en langpacks-en glibc-langpack-ja langpacks-ja.noarch glibc-locale-source
 
 RUN echo "###### set locale ######"
 RUN localedef -f UTF-8 -i ja_JP ja_JP.UTF-8
 
 RUN echo "###### install supervisord ######"
-RUN dnf install -y supervisor
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y supervisor
 
 #ifdef NGINX
 RUN echo "###### install nginx and pam auth module ######"
-RUN dnf install -y @nginx:1.16/common
-RUN dnf install -y https://github.com/jfut/nginx-module-auth-pam-rpm/releases/download/v1.5.3-1/nginx-module-auth-pam-1.5.3-1.module_el8.1.16.x86_64.rpm
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y @nginx:1.16/common
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y https://github.com/jfut/nginx-module-auth-pam-rpm/releases/download/v1.5.3-1/nginx-module-auth-pam-1.5.3-1.module_el8.1.16.x86_64.rpm
 RUN mkdir /etc/pki/nginx/
 RUN groupadd -g 42 shadow
 RUN chgrp shadow /etc/gshadow
@@ -61,37 +61,37 @@ RUN gpasswd -a nginx shadow
 
 #ifdef DESKTOP
 RUN echo "###### install input tools ######"
-RUN dnf install -y fcitx https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/f/fcitx-anthy-0.2.2-4.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/a/anthy-9100h-26.el7.x86_64.rpm
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y fcitx https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/f/fcitx-anthy-0.2.2-4.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/a/anthy-9100h-26.el7.x86_64.rpm
 
 RUN echo "###### install X and VNC ######"
-RUN dnf install -y xorg-x11-server-Xorg tigervnc-server
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y xorg-x11-server-Xorg tigervnc-server
 
 RUN echo "###### install xfce ######"
 RUN dnf -y -x gnome-keyring -x thunar-volman -x xfce4-screensaver -x xfce4-power-manager -x openssh-askpass -x grub2-tools --skip-broken groups install "Xfce" 
 RUN dnf -y groups install "Fonts"
-RUN dnf install -y xfce4-session
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y xfce4-session
 RUN rm /etc/xdg/autostart/xfce-polkit*
 #endif
 
 #ifdef XRDP
 RUN echo "###### install xrdp ######"
-RUN dnf install -y xrdp
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y xrdp
 #endif
 
 #ifdef DESKTOP
 RUN echo "###### install firefox ######"
-RUN dnf install -y firefox
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y firefox
 #endif
 
 #ifdef CHROME
 RUN echo "###### install chrome ######"
 RUN echo -e '[google-chrome]\nname=google-chrome\nbaseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearch\nenabled=1\ngpgcheck=1\ngpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub\n' >> /etc/yum.repos.d/chrome.repo
-RUN dnf install -y google-chrome-stable.x86_64
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y google-chrome-stable.x86_64
 #endif
 
 #ifdef SSHD
 RUN echo "###### install open-ssh and allow ssh login ######"
-RUN dnf install -y openssh-server
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y openssh-server
 RUN rm -f /run/nologin
 #endif
 
@@ -130,7 +130,7 @@ RUN curl -L --output /usr/local/bin/gosu  https://github.com/tianon/gosu/release
 RUN chmod 755 /usr/local/bin/gosu
 
 RUN echo "###### install some tools ######"
-RUN dnf install -y python2-pip.noarch psmisc openssh-clients vim which net-tools bzip2 mailcap bash-completion nss_wrapper gettext bind-utils tcpdump socat openssl screen tmux strace ltrace nmap-ncat iproute iputils ethtool
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y python2-pip.noarch psmisc openssh-clients vim which net-tools bzip2 mailcap bash-completion nss_wrapper gettext bind-utils tcpdump socat openssl screen tmux strace ltrace nmap-ncat iproute iputils ethtool
 
 RUN echo "###### clanup ######"
 RUN rm -f /root/anaconda-post.log
@@ -171,7 +171,7 @@ RUN echo "###### install code server extentions ######"
 RUN /usr/bin/code-server --install-extension ms-ceintl.vscode-language-pack-ja
 RUN /usr/bin/code-server --install-extension tomoki1207.pdf
 #ifdef CONTAINER
-RUN dnf install -y google-noto-sans-cjk-ttc-fonts-20190416-1.el8.noarch
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y google-noto-sans-cjk-ttc-fonts-20190416-1.el8.noarch
 RUN /usr/bin/code-server --install-extension auchenberg.vscode-browser-preview
 RUN /usr/bin/code-server --install-extension ipedrazas.kubernetes-snippets
 RUN /usr/bin/code-server --install-extension ms-azuretools.vscode-docker
