@@ -31,7 +31,7 @@ RUN echo "###### install epel repository ######"
 RUN dnf install --nodocs --setopt=install_weak_deps=False -y epel-release
 
 RUN echo "###### install nessecery packages ######"
-RUN dnf install --nodocs --setopt=install_weak_deps=False -y passwd sudo wget findutils
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y passwd sudo wget findutils procps-ng
 
 RUN echo "###### install Japanese tools ######"
 RUN dnf install --nodocs --setopt=install_weak_deps=False -y glibc-locale-source glibc-langpack-en langpacks-en glibc-langpack-ja langpacks-ja.noarch glibc-locale-source
