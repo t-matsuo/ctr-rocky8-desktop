@@ -45,6 +45,14 @@ echo -e "------------------ VNC environment started ------------------"
 echo -e "VNCSERVER started on DISPLAY=$DISPLAY"
 
 echo -e "\n------------------ start fcitx ------------------------"
+while true; do
+    ps -ef | grep -q -w [/]usr/bin/fcitx-dbus-watcher
+    if [ $? -eq 0 ]; then
+        break
+    fi
+    echo "waiting /usr/bin/fcitx-dbus-watcher up"
+    sleep 1
+done
 export GTK_TM_MODULE=fcitx
 export QT_TM_MODULE=fcitx
 export XMODIFIERS=@im=fcitx
