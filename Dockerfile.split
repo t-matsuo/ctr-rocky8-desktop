@@ -1,8 +1,8 @@
 #ifndef CONTAINER
-FROM rockylinux:8.5
+FROM docker.io/rockylinux:8.5
 #endif
 #ifdef CONTAINER
-FROM tmatsuo/rocky8
+FROM docker.io/tmatsuo/rocky8
 #endif
 
 LABEL maintainer="matsuo.tak@gmail.com"

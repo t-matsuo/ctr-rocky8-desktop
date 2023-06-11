@@ -3,7 +3,7 @@ set -e
 
 : ${BUIDER="docker"}
 
-IMAGE_NAME="tmatsuo/rocky8-ja-"
+IMAGE_NAME="docker.io/tmatsuo/rocky8-ja-"
 if [ "$TAG" = "" ]; then
     TAG="latest"
 fi
