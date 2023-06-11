@@ -39,6 +39,15 @@ elif [ "$FLAVOR" = "xrdp" ]; then
     DESKTOP="" XRDP="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "desktop-full-custom" ]; then
     DESKTOP="" NGINX="" CODE="" XRDP="" FILER="" SSHD="" TTYD="" CHROME="" CONTAINER="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
+elif [ "$FLAVOR" = "desktop-full" ]; then
+    DESKTOP="" NGINX="" CODE="" XRDP="" FILER="" SSHD="" TTYD="" CHROME="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
+elif [ "$FLAVOR" = "all" ]; then
+    for i in desktop-min desktop-with-term-filer vscode vscode-custom term term-with-filer xrdp desktop-full-custom desktop-full; do
+        echo "------------------- building $i -------------------"
+        FLAVOR=$i ./build.sh
+        echo "------------------- building $i done --------------"
+    done
+    exit 0
 else
     # desktop-full
     DESKTOP="" NGINX="" CODE="" XRDP="" FILER="" SSHD="" TTYD="" CHROME="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
