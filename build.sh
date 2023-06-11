@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+: ${BUIDER="docker"}
+
 IMAGE_NAME="tmatsuo/rocky8-ja-"
 if [ "$TAG" = "" ]; then
     TAG="latest"
@@ -42,6 +44,14 @@ else
     DESKTOP="" NGINX="" CODE="" XRDP="" FILER="" SSHD="" TTYD="" CHROME="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 fi
 
-echo "docker build -t ${IMAGE_NAME}${FLAVOR}:${TAG}${IS_DEV} -f _Dockerfile.${FLAVOR}${IS_DEV} ."
-DOCKER_BUILDKIT=1 docker build --progress=plain -t ${IMAGE_NAME}${FLAVOR}:${TAG}${IS_DEV} -f _Dockerfile.${FLAVOR}${IS_DEV} .
+set +e
+which docker > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    BUIDER="podman"
+fi
+set -e
+echo "building image using $BUIDER"
+
+echo "$BUIDER build -t ${IMAGE_NAME}${FLAVOR}:${TAG}${IS_DEV} -f _Dockerfile.${FLAVOR}${IS_DEV} ."
+DOCKER_BUILDKIT=1 $BUIDER build --progress=plain -t ${IMAGE_NAME}${FLAVOR}:${TAG}${IS_DEV} -f _Dockerfile.${FLAVOR}${IS_DEV} .
 echo "builded from _Dockerfile.$FLAVOR${IS_DEV}"
