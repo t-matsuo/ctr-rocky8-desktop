@@ -247,4 +247,5 @@ COPY ./assets/scripts/xrdp_startup.sh $CTR_SCRIPTS/
 USER 0
 ENTRYPOINT ["/container/scripts/entrypoint.sh"]
 
-
+#break
+COPY ./assets/revision/revision /etc/revision

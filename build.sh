@@ -49,8 +49,18 @@ which docker > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     BUIDER="podman"
 fi
-set -e
 echo "building image using $BUIDER"
+
+if [ ! -d /assets/revision ]; then
+    mkdir -p ./assets/revision
+fi
+REVISION=$(TZ=UTC0 git show --quiet --date=local --format="%h %cd UTC t-matsuo/ctr-rocky8-desktop")
+if [ $? -eq 0 ]; then
+    echo $REVISION > ./assets/revision/revision
+else
+    echo "t-matsuo/ctr-rocky8-desktop" > ./assets/revision/revision
+fi
+set -e
 
 echo "$BUIDER build -t ${IMAGE_NAME}${FLAVOR}:${TAG}${IS_DEV} -f _Dockerfile.${FLAVOR}${IS_DEV} ."
 DOCKER_BUILDKIT=1 $BUIDER build --progress=plain -t ${IMAGE_NAME}${FLAVOR}:${TAG}${IS_DEV} -f _Dockerfile.${FLAVOR}${IS_DEV} .
