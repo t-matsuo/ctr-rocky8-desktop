@@ -42,7 +42,7 @@ elif [ "$FLAVOR" = "desktop-full-custom" ]; then
 elif [ "$FLAVOR" = "desktop-full" ]; then
     DESKTOP="" NGINX="" CODE="" XRDP="" FILER="" SSHD="" TTYD="" CHROME="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "all" ]; then
-    for i in desktop-min desktop-with-term-filer vscode vscode-custom term term-with-filer xrdp desktop-full-custom desktop-full; do
+    for i in desktop-min desktop-with-filer desktop-with-term-filer vscode vscode-custom term term-with-filer xrdp desktop-full-custom desktop-full; do
         echo "------------------- building $i -------------------"
         FLAVOR=$i ./build.sh
         echo "------------------- building $i done --------------"
