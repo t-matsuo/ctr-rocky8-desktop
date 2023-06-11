@@ -200,6 +200,9 @@ COPY ./assets/scripts/set-resolution /usr/local/bin/
 # Pach VNC. See https://github.com/novnc/noVNC/pull/1451
 COPY ./assets/novnc/vnc.html $NO_VNC_HOME/vnc.html
 COPY ./assets/novnc/launch.sh $NO_VNC_HOME/utils/launch.sh
+# Pach Clipboard Copy/Paste See https://github.com/novnc/noVNC/pull/1347
+COPY ./assets/novnc/clipboard.js $NO_VNC_HOME/core/clipboard.js
+COPY ./assets/novnc/rfb.js $NO_VNC_HOME/core/rfb.js
 #endif
 #ifdef NGINX
 COPY ./assets/supervisor/nginx.ini /etc/supervisord.d/
