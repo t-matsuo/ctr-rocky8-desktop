@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-: ${BUIDER="docker"}
+: ${BUILDER="docker"}
 
 IMAGE_NAME="docker.io/tmatsuo/rocky8-ja-"
 if [ "$TAG" = "" ]; then
@@ -23,6 +23,8 @@ fi
 
 if [ "$FLAVOR" = "desktop-min" ]; then
     DESKTOP="" NGINX="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
+elif [ "$FLAVOR" = "desktop-custom" ]; then
+    DESKTOP="" NGINX="" CODE="" TTYD="" CONTAINER="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "desktop-with-filer" ]; then
     DESKTOP="" NGINX="" FILER="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "desktop-with-term-filer" ]; then
@@ -56,9 +58,9 @@ fi
 set +e
 which docker > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    BUIDER="podman"
+    BUILDER="podman"
 fi
-echo "building image using $BUIDER"
+echo "building image using $BUILDER"
 
 if [ ! -d /assets/revision ]; then
     mkdir -p ./assets/revision
@@ -71,6 +73,6 @@ else
 fi
 set -e
 
-echo "$BUIDER build -t ${IMAGE_NAME}${FLAVOR}:${TAG}${IS_DEV} -f _Dockerfile.${FLAVOR}${IS_DEV} ."
-DOCKER_BUILDKIT=1 $BUIDER build --progress=plain -t ${IMAGE_NAME}${FLAVOR}:${TAG}${IS_DEV} -f _Dockerfile.${FLAVOR}${IS_DEV} .
+echo "$BUILDER build -t ${IMAGE_NAME}${FLAVOR}:${TAG}${IS_DEV} -f _Dockerfile.${FLAVOR}${IS_DEV} ."
+DOCKER_BUILDKIT=1 $BUILDER build --progress=plain -t ${IMAGE_NAME}${FLAVOR}:${TAG}${IS_DEV} -f _Dockerfile.${FLAVOR}${IS_DEV} .
 echo "builded from _Dockerfile.$FLAVOR${IS_DEV}"
