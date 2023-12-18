@@ -24,7 +24,7 @@ fi
 if [ "$FLAVOR" = "desktop-min" ]; then
     DESKTOP="" NGINX="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "desktop-custom" ]; then
-    DESKTOP="" NGINX="" CODE="" TTYD="" CONTAINER="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
+    DESKTOP="" NGINX="" CODE="" CHROME="" CONTAINER="" AZURE="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "desktop-with-filer" ]; then
     DESKTOP="" NGINX="" FILER="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "desktop-with-term-filer" ]; then
@@ -40,11 +40,11 @@ elif [ "$FLAVOR" = "term-with-filer" ]; then
 elif [ "$FLAVOR" = "xrdp" ]; then
     DESKTOP="" XRDP="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "desktop-full-custom" ]; then
-    DESKTOP="" NGINX="" CODE="" XRDP="" FILER="" SSHD="" TTYD="" CHROME="" CONTAINER="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
+    DESKTOP="" NGINX="" CODE="" XRDP="" FILER="" SSHD="" TTYD="" CHROME="" CONTAINER="" AZURE="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "desktop-full" ]; then
     DESKTOP="" NGINX="" CODE="" XRDP="" FILER="" SSHD="" TTYD="" CHROME="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "all" ]; then
-    for i in desktop-min desktop-with-filer desktop-with-term-filer vscode vscode-custom term term-with-filer xrdp desktop-full-custom desktop-full; do
+    for i in desktop-min desktop-custom desktop-with-filer desktop-with-term-filer vscode vscode-custom term term-with-filer xrdp desktop-full-custom desktop-full; do
         echo "------------------- building $i -------------------"
         FLAVOR=$i ./build.sh
         echo "------------------- building $i done --------------"

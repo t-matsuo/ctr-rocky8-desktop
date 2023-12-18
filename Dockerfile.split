@@ -132,6 +132,11 @@ RUN chmod 755 /usr/local/bin/gosu
 RUN echo "###### install some tools ######"
 RUN dnf install --nodocs --setopt=install_weak_deps=False -y python2-pip.noarch psmisc openssh-clients vim which net-tools bzip2 mailcap bash-completion nss_wrapper gettext bind-utils tcpdump socat openssl screen tmux strace ltrace nmap-ncat iproute iputils ethtool
 
+#ifdef AZURE
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y azure-cli
+RUN az extension add --name ssh
+#endif
+
 RUN echo "###### clanup ######"
 RUN rm -f /root/anaconda-post.log
 RUN rm -f /root/original-ks.cfg
