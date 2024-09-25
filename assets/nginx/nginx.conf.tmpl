@@ -66,6 +66,7 @@ http {
 
         autoindex off;
         server_tokens off;
+        client_max_body_size 10000m;
 
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
