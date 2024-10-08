@@ -37,14 +37,20 @@ elif [ "$FLAVOR" = "term" ]; then
     NGINX="" TTYD="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "term-with-filer" ]; then
     NGINX="" FILER="" TTYD="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
+elif [ "$FLAVOR" = "term-custom" ]; then
+    NGINX="" TTYD="" CONTAINER="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
+elif [ "$FLAVOR" = "term-with-filer-custom" ]; then
+    NGINX="" FILER="" TTYD="" CONTAINER="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "xrdp" ]; then
     DESKTOP="" XRDP="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
+elif [ "$FLAVOR" = "xrdp-custom" ]; then
+    DESKTOP="" XRDP="" CONTAINER="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "desktop-full-custom" ]; then
     DESKTOP="" NGINX="" CODE="" XRDP="" FILER="" SSHD="" TTYD="" CHROME="" CONTAINER="" AZURE="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "desktop-full" ]; then
     DESKTOP="" NGINX="" CODE="" XRDP="" FILER="" SSHD="" TTYD="" CHROME="" ./cocker $CC_OPTION _Dockerfile.split.tmp > _Dockerfile.${FLAVOR}${IS_DEV}
 elif [ "$FLAVOR" = "all" ]; then
-    for i in desktop-min desktop-custom desktop-with-filer desktop-with-term-filer vscode vscode-custom term term-with-filer xrdp desktop-full-custom desktop-full; do
+    for i in desktop-min desktop-custom desktop-with-filer desktop-with-term-filer vscode vscode-custom term term-custom term-with-filer-custom xrdp xrdp-custom desktop-full-custom desktop-full; do
         echo "------------------- building $i -------------------"
         FLAVOR=$i ./build.sh
         echo "------------------- building $i done --------------"
