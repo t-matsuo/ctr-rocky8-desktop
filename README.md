@@ -33,7 +33,7 @@ tmatsuo/rocky8-ja-desktop-min 以外に以下のイメージを用意してい�
 |tmatsuo/rocky8-ja-desktop-min             |✓                |✓      |      |         |            |              |           |    |
 |tmatsuo/rocky8-ja-desktop-with-filer      |✓                |✓      |      |✓        |            |              |           |    |
 |tmatsuo/rocky8-ja-desktop-with-term-filer |✓                |✓      |      |✓        |✓           |              |           |    |
-|tmatsuo/rocky8-ja-desktop-ful             |✓                |✓      |✓     |✓        |✓           |✓             |✓          |✓   |
+|tmatsuo/rocky8-ja-desktop-full            |✓                |✓      |✓     |✓        |✓           |✓             |✓          |✓   |
 |tmatsuo/rocky8-ja-xrdp                    |                 |       |      |         |            |✓             |           |    |
 |tmatsuo/rocky8-ja-term-with-filer         |                 |       |      |✓        |✓           |              |           |    |
 
@@ -43,7 +43,7 @@ tmatsuo/rocky8-ja-desktop-min 以外に以下のイメージを用意してい�
 ```
 # ./build.sh
 ```
-=> デフォルトで、tmatsuo/rocky8-ja-desktop-ful イメージが生成されます。
+=> デフォルトで、tmatsuo/rocky8-ja-desktop-full イメージが生成されます。
 
 ```
 # FLAVOR=desktop-min ./build.sh
