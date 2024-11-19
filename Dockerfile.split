@@ -183,6 +183,13 @@ RUN /usr/bin/code-server --install-extension ms-azuretools.vscode-docker
 #endif
 #endif
 
+RUN echo 'SSHAGENT=/usr/bin/ssh-agent' >> ~/.bash_profile
+RUN echo 'SSHAGENTARGS="-s"' >> ~/.bash_profile
+RUN echo 'if [ -z "$SSH_AUTH_SOCK" -a -x "$SSHAGENT" ]; then' >> ~/.bash_profile
+RUN echo '    eval `$SSHAGENT $SSHAGENTARGS` > /dev/null 2>&1' >> ~/.bash_profile
+RUN echo '    trap "kill $SSH_AGENT_PID" 0' >> ~/.bash_profile
+RUN echo 'fi' >> ~/.bash_profile
+
 RUN echo "###### add and copy files ######"
 COPY ./assets/scripts/supervisord_startup.sh $CTR_SCRIPTS/
 #ifdef DESKTOP
