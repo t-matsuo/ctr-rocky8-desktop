@@ -100,7 +100,7 @@ RUN alternatives --set python /usr/bin/python3
 
 #ifdef TTYD
 RUN echo "###### install ttyd ######"
-RUN curl -L -o /usr/local/bin/ttyd https://github.com/t-matsuo/ttyd/releases/download/1.6.1.1/ttyd_linux.x86_64
+RUN curl -L -o /usr/local/bin/ttyd https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86_64
 RUN chmod 755 /usr/local/bin/ttyd
 #endif
 
