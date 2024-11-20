@@ -388,7 +388,7 @@ fi
 
 if [ -f /etc/supervisord.d/ttyd.ini ]; then
     if [ "$TTYD_OPTS" = "" ]; then
-        TTYD_OPTS='-P 30'
+        TTYD_OPTS='-P 5'
     fi
     export TTYD_OPTS
 fi
