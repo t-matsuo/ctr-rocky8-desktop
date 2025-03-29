@@ -1,8 +1,8 @@
 #ifndef CONTAINER
-FROM docker.io/rockylinux:8.5
+FROM docker.io/rockylinux:8.5 as build
 #endif
 #ifdef CONTAINER
-FROM docker.io/tmatsuo/rocky8
+FROM docker.io/tmatsuo/rocky8 as build
 #endif
 
 LABEL maintainer="matsuo.tak@gmail.com"
@@ -61,13 +61,13 @@ RUN gpasswd -a nginx shadow
 
 #ifdef DESKTOP
 RUN echo "###### install input tools ######"
-RUN dnf install --nodocs --setopt=install_weak_deps=False -y fcitx https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/f/fcitx-anthy-0.2.2-4.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/a/anthy-9100h-26.el7.x86_64.rpm
+RUN dnf install --nodocs --setopt=install_weak_deps=False -y fcitx https://archives.fedoraproject.org/pub/archive/epel/7/x86_64/Packages/f/fcitx-anthy-0.2.2-4.el7.x86_64.rpm https://archives.fedoraproject.org/pub/archive/epel/7/x86_64/Packages/a/anthy-9100h-26.el7.x86_64.rpm
 
 RUN echo "###### install X and VNC ######"
 RUN dnf install --nodocs --setopt=install_weak_deps=False -y xorg-x11-server-Xorg tigervnc-server
 
 RUN echo "###### install xfce ######"
-RUN dnf -y -x gnome-keyring -x thunar-volman -x xfce4-screensaver -x xfce4-power-manager -x openssh-askpass -x grub2-tools --skip-broken groups install "Xfce" 
+RUN dnf -y -x gnome-keyring -x thunar-volman -x xfce4-screensaver -x xfce4-power-manager -x openssh-askpass -x grub2-tools --skip-broken groups install "Xfce"
 RUN dnf -y groups install "Fonts"
 RUN dnf install --nodocs --setopt=install_weak_deps=False -y xfce4-session
 RUN rm /etc/xdg/autostart/xfce-polkit*
@@ -258,3 +258,8 @@ ENTRYPOINT ["/container/scripts/entrypoint.sh"]
 
 #break
 COPY ./assets/revision/revision /etc/revision
+
+
+FROM scratch
+COPY --from=build / /
+ENTRYPOINT ["/container/scripts/entrypoint.sh"]
